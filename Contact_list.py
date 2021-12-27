@@ -14,8 +14,11 @@ def add_contact():
 
 def delete_contact():
     name = str(input('Name: '))
-    phone_list.pop(name)
-    return print(f'You deleted {name} from your contact list.')
+    if name not in phone_list:
+        print('Contact not found')
+    else:
+        phone_list.pop(name)
+        return print(f'You deleted {name} from your contact list.')
 
 
 def update_contact():
