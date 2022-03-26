@@ -15,7 +15,7 @@ def import_csv():
         # Here you define the columns and their names, so it can be saved as a variable and imported automatically to MySQL
         column_one = input('column_1 name: ')
         column_two = input('column_2 name: ')
-        column_three = input('column_2 name: ')
+        column_three = input('column_3 name: ')
         # Make a loop to read all the lines
         for line in csv_reader:
             # These var defines where the data will be placed, according to its index number. Think of the index as a column
