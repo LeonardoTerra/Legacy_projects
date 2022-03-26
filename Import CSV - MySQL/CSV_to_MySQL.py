@@ -1,7 +1,7 @@
 import csv
 import mysql.connector
 
-connection = mysql.connector.connect(host='localhost', user='root', password='1234', database='people')
+connection = mysql.connector.connect(host='localhost', user='root', password='', database='people')
 cursor = connection.cursor()
 
 
