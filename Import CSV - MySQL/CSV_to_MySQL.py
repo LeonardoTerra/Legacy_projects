@@ -13,7 +13,7 @@ def import_csv():
         csv_reader = csv.reader(csv_file, delimiter=',')
         next(csv_reader)
         # Here you define the columns and their names, so it can be saved as a variable and imported automatically to MySQL
-        column_one = input('column_1 name: ')
+        column_one = input('column_1 name: ') # The column's names take the same name of the headers in the file
         column_two = input('column_2 name: ')
         column_three = input('column_3 name: ')
         # Make a loop to read all the lines
