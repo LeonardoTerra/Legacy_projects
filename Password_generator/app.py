@@ -41,8 +41,7 @@ def manual_password_generator():
             }
             for v in requirements.values():
                 print(v)
-    return "".join(
-        password)  # We use join like this in order to print something without brackets. It can be a print or a return.
+    return "".join(password)  # We use join like this in order to print something without brackets. It can be a print or a return.
 
 
 def auto_password_generator():
@@ -58,8 +57,6 @@ def auto_password_generator():
     return print(
         f'{"".join(password)}')  # We use join like this in order to print something without brackets. It can be a print or a return.
 
-
-auto_password_generator()
 
 # READ.ME
 
