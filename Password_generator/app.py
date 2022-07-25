@@ -1,64 +1,105 @@
-import random
-import string
-import re
+import mysql.connector
+from module import *
+import pandas as pd
+
+# Layout
+menu = {
+    "1": 'Insert',
+    "2": 'Read',
+    "3": "Update",
+    "4": "Delete",
+    "5": "Close"
+}
 
 
-def password_validation():
-    # Here we define a loop that will play until the user inputs an INT value.
+def layout():
+    print("-----------------------------")
+    print("     PASSWORD DATABASE")
+    print("-----------------------------")
+    print("-----------------------------")
+
+    for k, v in menu.items():
+        print(f'{k} - {v}')
+    print("-----------------------------")
+
+
+connection = mysql.connector.connect(host='localhost', user='root', password='1234', database='password_generator')
+cursor = connection.cursor()
+
+
+def create_account_password():
+    account_name = input("Account: ")
+    account_password = auto_password_generator()
+
+    command = f'INSERT INTO Password_table (Account_name, User_password) VALUES ("{account_name}", "{account_password}")'
+    cursor.execute(command)
+    connection.commit()
+    print(f"{account_name}'s password saved to the Database")
+    return account_password
+
+
+def read_account_password():
+    command = f'SELECT * FROM Password_table'
+    cursor.execute(command)
+    result = cursor.fetchall()  # read database
+
+    dataframe = pd.DataFrame(result, columns=['ID', 'ACCOUNT', 'PASSWORD'])
+    print(dataframe)
+
+
+def update_account_password():
+    try:
+        account_name = input('Account: ')
+        account_password = auto_password_generator()
+        command = f'UPDATE Password_table SET User_password = "{account_password}" WHERE Account_name = "{account_name}"'
+        cursor.execute(command)
+        connection.commit()  # Edit the database (create, update, delete)
+        print('Password updated')
+    except:
+        print('Update failed')
+
+
+def delete_account_password():
+    account_name = input('Account: ')
+
+    command = f'DELETE FROM Password_table WHERE Account_name = "{account_name}"'
+    cursor.execute(command)
+    connection.commit()  # Edit the database (create, update, delete)
+
+    print('Account deleted')
+
+
+# main code
+def running():
     while True:
-        # The TRY allows us to see whether the input is an INT or not. If it's not, the ValueError plays its role.
+        layout()
         try:
-            password_length = int(input('How long should the password be: '))
-            # Here is an IF to check whether the password is too long or too small. It gives the user an advice.
-            if password_length >= 8:
-                print('Be sure to remember it.')
-                return password_length
-            elif password_length < 8:
-                print("Most Apps and Websites need 8 digits")
-                return password_length
+            manual_input = int(input("Select: "))
+            if manual_input == 1:
+                create_account_password()
+            elif manual_input == 2:
+                read_account_password()
+            elif manual_input == 3:
+                update_account_password()
+            elif manual_input == 4:
+                delete_account_password()
+            elif manual_input == 5:
+                print("App closed")
+                break
         except ValueError:
-            print("Please, provide a valid value")
+            print("Please, select a valid option.")
 
 
-def manual_password_generator():
-    # Here I built the regex that will serve as the condition
-    password = []
-    pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
-    while True:
-        user_input = input('Choose a password: ')
-        check = pattern.fullmatch(user_input)  # This check allows me to see whether the password matches the conditions
-        if check is not None:
-            print('All Right!')
-            password.append(user_input)
-            break
-        else:
-            requirements = {
-                "1": 'Your Password should contain the following requirements:',
-                "2": '8 Digits',
-                "3": '1 Capital letter',
-                "4": '1 Number',
-                "5": '1 Symbol'
-            }
-            for v in requirements.values():
-                print(v)
-    return "".join(password)  # We use join like this in order to print something without brackets. It can be a print or a return.
+running()
 
+cursor.close()
+connection.close()
 
-def auto_password_generator():
-    # Here is the list that will store the password and the var that will generate the letters and symbols that will be used.
-    password = []
-    characters = list(string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation)
+'''
+This piece of code allows one to run a CRUD in a database allowing the user to perform actions such as: 
+Create, delete and update accounts and passwords. I should be used alongside the module.py provided.
 
-    # Here we loop throughout the values above in order to select them and print the password.
-    for i in range(password_validation()):
-        random_characters = random.choice(characters)
-        password.append(random_characters)
-        random.shuffle(password)  # Change the order of the values. Make it become unpredictable
-    return print(
-        f'{"".join(password)}')  # We use join like this in order to print something without brackets. It can be a print or a return.
+DBMS used - MySQL (script in the folder)
 
-
-# READ.ME
-
-# This code allows you to use one of the functions above to create a password.
-# This code doesn't have an user GUI or a Web app yet. Feel free to improve it.
+There are lots of improvements to be done. Be my guest!
+'''
